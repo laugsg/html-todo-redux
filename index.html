@@ -119,18 +119,14 @@
             return state;
         }
       }
-
-      function App(state = {}, action) {
-        return {
-          todos: todos(state.todos, action),
-          goals: goals(state.goals, action),
-        };
-      }
       //#endregion
       
       //#endregion App Code
 
-      const store = Redux.createStore(App);
+      const store = Redux.createStore(Redux.combineReducers({
+        todos,
+        goals
+      }));
       store.subscribe(() => {
         console.log(`The new state is: `, store.getState());
       });
