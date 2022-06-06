@@ -123,8 +123,7 @@
 
       //#endregion App Code
 
-      //#region Middleware
-      // redux middleware
+      //#region Redux Middlewares
       const checker = (store) => (next) => (action) => {
         if (
           action.type === ADD_TODO &&
@@ -142,6 +141,15 @@
 
         next(action);
       }
+
+      const logger = (store) => (next) => (action) => {
+        console.group(action.type)
+        console.log("The action: ", action)
+        const result = next(action)
+        console.log("The new state: ", store.getState())
+        console.groupEnd()
+        return result
+      }
       //#endregion
 
       const store = Redux.createStore(
@@ -149,11 +157,8 @@
           todos,
           goals,
         }),
-        Redux.applyMiddleware(checker)
+        Redux.applyMiddleware(checker, logger)
       );
-      store.subscribe(() => {
-        console.log(`The new state is: `, store.getState());
-      });
       store.subscribe(() => {
         /** DOM as a representation of the State
          * The first flow of data goes to the store,
